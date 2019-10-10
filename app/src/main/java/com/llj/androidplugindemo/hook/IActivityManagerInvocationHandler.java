@@ -1,5 +1,6 @@
 package com.llj.androidplugindemo.hook;
 
+import android.content.ComponentName;
 import android.content.Intent;
 
 import java.lang.reflect.InvocationHandler;
@@ -10,10 +11,10 @@ import java.lang.reflect.Method;
  * @date: 2019-09-09 10:16
  * @description:
  */
-public class IActivityManagerProxy implements InvocationHandler {
+public class IActivityManagerInvocationHandler implements InvocationHandler {
     private Object mActivityManager;
 
-    public IActivityManagerProxy(Object activityManager) {
+    public IActivityManagerInvocationHandler(Object activityManager) {
         mActivityManager = activityManager;
     }
 
@@ -32,9 +33,10 @@ public class IActivityManagerProxy implements InvocationHandler {
             intent = (Intent) args[index];
             Intent proxyIntent = new Intent();
             String packageName = "com.llj.androidplugindemo";
-            proxyIntent.setClassName(packageName, "com.llj.androidplugindemo.hook.ProxyActivity");
+            proxyIntent.setComponent(new ComponentName(packageName, ProxyActivity.class.getName()));
             proxyIntent.putExtra(HookHelper.TARGET_INTENT, intent);
-            args[index] = proxyIntent;//偷梁换柱
+            //偷梁换柱
+            args[index] = proxyIntent;
         }
         return method.invoke(mActivityManager, args);
     }

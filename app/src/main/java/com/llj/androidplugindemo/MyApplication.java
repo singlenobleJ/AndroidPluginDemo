@@ -1,6 +1,7 @@
 package com.llj.androidplugindemo;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.llj.androidplugindemo.hook.HookHelper;
 
@@ -16,13 +17,18 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
         try {
             HookHelper.hookAMS();
+            HookHelper.hookPMS(this);
             HookHelper.hookHandler();
             HookHelper.hookInstrumentation();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

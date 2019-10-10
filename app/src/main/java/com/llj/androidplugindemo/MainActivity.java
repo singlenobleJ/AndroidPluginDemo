@@ -3,6 +3,7 @@ package com.llj.androidplugindemo;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void startOtherApp() {
         try {
-            ClassLoader dexClassLoader = AppClassLoaderHelper.getClassLoader(MyApplication.sInstance, "/storage/emulated/0/plugin.apk");
+            String pluginPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/plugin.apk";
+            ClassLoader dexClassLoader = AppClassLoaderHelper.getClassLoader(MyApplication.sInstance, pluginPath);
             Class<?> targetClass = dexClassLoader.loadClass("com.llj.plugin.MainActivity");
             Intent intent = new Intent(this, targetClass);
             intent.putExtra(HookHelper.TARGET_INTENT_NAME, intent.getComponent().getClassName());
